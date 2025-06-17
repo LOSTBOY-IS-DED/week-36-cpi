@@ -1,14 +1,24 @@
-pub fn add(left: u64, right: u64) -> u64 {
-    left + right
-}
+use solana_program::{
+    account_info::{AccountInfo, next_account_info},
+    entrypoint::{self, ProgramResult},
+    pubkey::Pubkey,
+};
 
-#[cfg(test)]
-mod tests {
-    use super::*;
+entrypoint!(process_instruction);
 
-    #[test]
-    fn it_works() {
-        let result = add(2, 2);
-        assert_eq!(result, 4);
-    }
+fn process_instruction(
+    // it takes three things
+    program_id: &Pubkey,
+    accounts: &[AccountInfo], //[data_account]
+    instruction_data: &[u8],
+) -> ProgramResult {
+    // how to grab the first account
+    let mut iter = accounts.iter();
+    let data_account = next_account_info(&mut iter)?;
+
+    // either write the thing below or add the question mark
+    // match data_account{
+    //     Ok(data_account) => {},
+    //     Err(err) => {return Err(err)}
+    // }
 }

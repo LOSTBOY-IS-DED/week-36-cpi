@@ -1564,6 +1564,8 @@ dependencies = [
 name = "week-36-cpi"
 version = "0.1.0"
 dependencies = [
+ "borsh 1.5.7",
+ "borsh-derive 1.5.7",
  "solana-program",
 ]
 
