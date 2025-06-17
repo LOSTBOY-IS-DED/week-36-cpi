@@ -3,4 +3,8 @@ name = "week-36-cpi"
 version = "0.1.0"
 edition = "2024"
 
+[lib]
+create-type = ["cdylib", "lib"]
+
 [dependencies]
+solana-program = "1.18.26"

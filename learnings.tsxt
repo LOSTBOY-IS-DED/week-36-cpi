@@ -6,3 +6,18 @@ CPI means one contract using an another one same like one backend talking to ano
 flow me calling the program from my browser which invokes another program the limit is max 4
 
 writing mildly hard contract
+
+Question ? 
+
+why cant the wallet change the data its self ? 
+-> only the owner can do it or assigned program Id
+
+wallet in typescript 
+contract in rust 
+right rust test for it
+right the typescript test for it 
+
+what are we building here ? 
+
+a simple contract which will just increase the counter on the Solana blockchain
+
