@@ -21,3 +21,19 @@ what are we building here ?
 
 a simple contract which will just increase the counter on the Solana blockchain
 
+steps : 
+
+1. Define the iterator 
+2. Get the first account 
+3. Deserialize it 
+4. do the operation 
+5. serialize it again
+
+// Learning SVM its a library to test contracts
+
+
+steps of writing the test using liteSVM
+
+step 1 : we start little Solana virtual machine
+step 2 : we gave path to the deployed contract actually we deployed
+step 3 : we created the pair and the data account and signed the transaction
