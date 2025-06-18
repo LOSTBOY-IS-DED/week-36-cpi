@@ -7,6 +7,7 @@ import {
   SystemProgram,
   Keypair,
   LAMPORTS_PER_SOL,
+  TransactionInstruction,
 } from "@solana/web3.js";
 
 // what doesn't come inbuilt is custom contract
@@ -44,4 +45,32 @@ test("one transfer", () => {
   svm.sendTransaction(tx);
   const balanceAfter = svm.getBalance(dataAccount.publicKey);
   expect(balanceAfter).toBe(svm.minimumBalanceForRentExemption(BigInt(4)));
+
+  // how to send instruction to the custom contract // as i dig through the create Account function it just creates a new  transaction we are gonna do the same
+  const ix2 = new TransactionInstruction({
+    keys: [
+      //our contract only has one account to pass thats pubKey
+      { pubkey: dataAccount.publicKey, isSigner: false, isWritable: true },
+    ],
+    programId: contractPubKey,
+    data: Buffer.from(""),
+  });
+  // now lets send the transaction
+  const tx2 = new Transaction();
+  tx2.recentBlockhash = blockhash;
+  tx2.feePayer = payer.publicKey;
+  tx2.add(ix2);
+  tx2.sign(payer); // we can only call the sign function once
+  svm.sendTransaction(tx2);
+
+  // now we should actually check does it actually have the data which has space 4
+  const newDataAccount = svm.getAccount(dataAccount.publicKey);
+  // console.log(newDataAccount?.data);
+
+  expect(newDataAccount?.data[0]).toBe(1);
+  expect(newDataAccount?.data[0]).toBe(0);
+  expect(newDataAccount?.data[0]).toBe(0);
+  expect(newDataAccount?.data[0]).toBe(0);
 });
+
+// NOTE : we should have a check that the dataAccount must sign the transaction and the contract should verify it
