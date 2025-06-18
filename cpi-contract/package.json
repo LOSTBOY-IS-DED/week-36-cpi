@@ -1,0 +1,5 @@
+{
+  "dependencies": {
+    "litesvm": "^0.2.0"
+  }
+}
