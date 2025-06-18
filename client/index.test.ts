@@ -53,18 +53,22 @@ test("one transfer", () => {
       keys: [
         //our contract only has one account to pass thats pubKey
         { pubkey: dataAccount.publicKey, isSigner: false, isWritable: true },
+        { pubkey: payer.publicKey, isSigner: true, isWritable: true },
       ],
       programId: contractPubKey,
       data: Buffer.from(""),
     });
     // now lets send the transaction
+    const blockhash = svm.latestBlockhash(); // setting it again
     const tx2 = new Transaction();
     tx2.recentBlockhash = blockhash;
     tx2.feePayer = payer.publicKey;
     tx2.add(ix2);
     tx2.sign(payer); // we can only call the sign function once
-    svm.sendTransaction(tx2);
-    svm.expireBlockhash();
+    const response = svm.sendTransaction(tx2);
+    // console.log(response); // this must throw an error now
+    console.log(response.toString());
+    svm.expireBlockhash(); // expiring it again
   }
 
   doubleIt();
@@ -76,10 +80,11 @@ test("one transfer", () => {
   const newDataAccount = svm.getAccount(dataAccount.publicKey);
   console.log(newDataAccount?.data);
 
-  expect(newDataAccount?.data[0]).toBe(0);
+  expect(newDataAccount?.data[0]).toBe(8); //8
   expect(newDataAccount?.data[1]).toBe(0);
   expect(newDataAccount?.data[2]).toBe(0);
-  expect(newDataAccount?.data[3]).toBe(1); //8
+  expect(newDataAccount?.data[3]).toBe(0);
 });
 
 // NOTE : we should have a check that the dataAccount must sign the transaction and the contract should verify it
+// NOTE : we are expiring and reinitialising blockhash
