@@ -37,3 +37,22 @@ steps of writing the test using liteSVM
 step 1 : we start little Solana virtual machine
 step 2 : we gave path to the deployed contract actually we deployed
 step 3 : we created the pair and the data account and signed the transaction
+
+// this is how to send instruction to the system program on Solana how to do the same on custom program
+  const ixs = [
+    SystemProgram.createAccount({
+      fromPubkey: payer.publicKey,
+      newAccountPubkey: dataAccount.publicKey,
+      lamports: Number(svm.minimumBalanceForRentExemption(BigInt(4))),
+      space: 4,
+      programId: contractPubKey, // the account which will double contract public key here
+    }),
+  ];
+
+// digging in to the createAccount function 
+
+https://github.com/solana-foundation/solana-web3.js/blob/6f265af8837ee782d0720f0ad6f8bcafd01eb795/src/programs/system.ts#L20
+
+better clean structured code below
+
+https://github.com/100xdevs-cohort-3/pdas-and-cpis

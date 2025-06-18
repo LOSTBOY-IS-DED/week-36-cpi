@@ -1,7 +1,8 @@
 use borsh::{BorshDeserialize, BorshSerialize};
 use solana_program::{
     account_info::{AccountInfo, next_account_info},
-    entrypoint::{self, ProgramResult},
+    entrypoint,
+    entrypoint::ProgramResult,
     pubkey::Pubkey,
 };
 
@@ -21,16 +22,22 @@ fn process_instruction(
     // how to grab the first account
     let mut iter = accounts.iter();
     let data_account = next_account_info(&mut iter)?;
+    let user_account = next_account_info(&mut iter)?;
+
+    // we must check this is signed by the data account
+    // if data_account.is_signer != true {
+    //     return Err(ProgramError::MissingRequiredSignature);
+    // }
 
     let mut counter = OnChainData::try_from_slice(&data_account.data.borrow_mut())?;
 
     if counter.count == 0 {
-        counter.count == 1;
+        counter.count = 1;
     } else {
         counter.count = counter.count * 2
     }
 
-    counter.serialize(&mut *data_account.data.borrow_mut());
+    counter.serialize(&mut *data_account.data.borrow_mut())?;
 
     ProgramResult::Ok(())
     // either write the thing below or add the question mark
