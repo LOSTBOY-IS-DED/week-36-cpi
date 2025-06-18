@@ -2,6 +2,8 @@ use solana_program::{
     account_info::{AccountInfo, next_account_info},
     entrypoint,
     entrypoint::ProgramResult,
+    instruction::{AccountMeta, Instruction}, // ✅ Added
+    program::invoke,                         // ✅ Added
     pubkey::Pubkey,
 };
 
