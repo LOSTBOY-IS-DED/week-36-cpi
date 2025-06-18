@@ -25,24 +25,33 @@ test("CPI works as expected", async () => {
   await createDataAccountOnChain(svm, dataAcc, userAcc, doubleContract);
 
   // Prepare CPI transaction
-  const ix = new TransactionInstruction({
-    keys: [
-      { pubkey: dataAcc.publicKey, isSigner: true, isWritable: true },
-      { pubkey: doubleContract, isSigner: false, isWritable: false },
-    ],
-    programId: cpiContract,
-    data: Buffer.from(""),
-  });
+  async function doubleIt() {
+    const ix = new TransactionInstruction({
+      keys: [
+        { pubkey: dataAcc.publicKey, isSigner: true, isWritable: true },
+        { pubkey: doubleContract, isSigner: false, isWritable: false },
+      ],
+      programId: cpiContract,
+      data: Buffer.from(""),
+    });
 
-  const blockhash = await svm.latestBlockhash();
+    const blockhash = await svm.latestBlockhash();
 
-  const transaction = new Transaction().add(ix);
-  transaction.recentBlockhash = blockhash;
-  transaction.feePayer = userAcc.publicKey;
-  transaction.sign(userAcc, dataAcc);
+    const transaction = new Transaction().add(ix);
+    transaction.recentBlockhash = blockhash;
+    transaction.feePayer = userAcc.publicKey;
+    transaction.sign(userAcc, dataAcc);
 
-  const res = await svm.sendTransaction(transaction);
-  console.log(res.toString());
+    const res = await svm.sendTransaction(transaction);
+    console.log(res.toString());
+    svm.expireBlockhash();
+  }
+
+  doubleIt();
+  doubleIt();
+  doubleIt();
+  doubleIt();
+
   const dataAccountData = svm.getAccount(dataAcc.publicKey);
   expect(dataAccountData?.data[0]).toBe(1);
   expect(dataAccountData?.data[1]).toBe(0);
